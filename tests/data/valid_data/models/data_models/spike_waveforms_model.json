@@ -42,6 +42,7 @@
                 "enum": ["[charge]"]
             },
             "sampling_rate": {},
+            "duration": {},
             "session_data_ref": {},
             "animal_data_ref": {},
             "probe_data_ref": {},

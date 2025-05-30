@@ -1,0 +1,37 @@
+services:
+  app:
+    image: as6744/signalstore-app
+    ports:
+      - "8888:8888"
+    environment:
+      - MONGO_URI=mongodb://mongo:27017/mydatabase
+    depends_on:
+      - mongo
+    volumes:
+      - ./notebooks:/app/notebooks
+      - ./app/src:/app/src
+      - ./data:/app/data
+      - ./tests:/app/tests
+
+  mongo:
+    image: mongo:latest
+    ports:
+      - "27017:27017"   # map host port 27015 to container port 27017
+    # No authentication variables for MongoDB means it will run without auth.
+    volumes:
+      - ./data/internal/mongodb:/data/db
+
+  mongo-express:
+    image: mongo-express:latest
+    ports:
+      - "8081:8081"
+    environment:
+      # - ME_CONFIG_MONGODB_SERVER=mongo
+      # - ME_CONFIG_MONGODB_ENABLE_ADMIN=true
+      - ME_CONFIG_MONGODB_URL=mongodb://mongo:27017
+      # Remove admin credentials because they aren’t needed
+    depends_on:
+      - mongo
+
+# volumes:
+#   mongo_data:
