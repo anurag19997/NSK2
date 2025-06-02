@@ -4,7 +4,7 @@ import re
 import xarray as xr
 
 
-PROJECT_PATH = '../NSK-isolated'
+PROJECT_PATH = 'app/src/NSK-isolated-main'
 sys.path.append(PROJECT_PATH)
 print(PROJECT_PATH)
 
