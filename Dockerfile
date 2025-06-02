@@ -1,5 +1,15 @@
 # Use the official miniconda base image
 FROM continuumio/miniconda3
+FROM python:3.12-slim
+
+# Install Tkinter and X11 tools
+RUN apt-get update && apt-get install -y \
+    python3-tk \
+    x11-apps \
+    && apt-get clean
+
+# Set the DISPLAY env var for runtime (can also set at docker-compose level)
+ENV DISPLAY=host.docker.internal:0.0
 
 # Set a working directory
 WORKDIR /app
