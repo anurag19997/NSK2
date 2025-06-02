@@ -1,10 +1,6 @@
 #
 
 # Data to ignore (for now)
-data/
-*.nc
-*.csv
-*.xlsx
 
 # permanent data directories to ignore
 data/internal/
