@@ -1,0 +1,16 @@
+Metadata-Version: 2.4
+Name: signalstore
+Version: 0.0.1
+Author: David Vaughan (developer), Andrew Aoun (notebook contributor), Abid Hussaini (lab Principal Investigator)
+Author-email: "Oliver Shetler (principal architect, primary maintainer)" <cos2112@cumc.columbia.edu>
+Requires-Dist: dependency_injector
+Requires-Dist: jsonschema
+Requires-Dist: numpy
+Requires-Dist: xarray
+Requires-Dist: fsspec
+Requires-Dist: gcsfs
+Requires-Dist: dask
+Requires-Dist: scipy
+Requires-Dist: zarr
+Requires-Dist: openpyxl
+Requires-Dist: pydantic

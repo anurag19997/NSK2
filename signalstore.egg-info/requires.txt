@@ -1,0 +1,11 @@
+dependency_injector
+jsonschema
+numpy
+xarray
+fsspec
+gcsfs
+dask
+scipy
+zarr
+openpyxl
+pydantic
