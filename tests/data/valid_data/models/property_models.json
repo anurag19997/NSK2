@@ -422,6 +422,14 @@
       "type": "string"
       }
     },
+    {"schema_name": "sampling_rate",
+    "schema_title": "Sampling Rate",
+    "schema_description": "The sample rate of the spike recording.",
+    "schema_type": "property_model",
+    "json_schema": {
+      "type": "string"
+      }
+    },
     {"schema_name": "arena_shape",
     "schema_title": "Arena Shape",
     "schema_description": "The shape of the arena.",

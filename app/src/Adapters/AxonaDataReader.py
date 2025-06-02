@@ -227,8 +227,8 @@ class AxonaDataReader:
         tet_meta_dict["data_name"] = ses_name
         tet_meta_dict["data_dimensions"] = ["spike_idx", "channel", "sample"]
         tet_meta_dict["dimension_of_measure"] = "[charge]"
-        tet_meta_dict["sampling_rate"] = spike_params["sample_rate"]
-        tet_meta_dict["duration"] = spike_params["duration"]
+        tet_meta_dict["sampling_rate"] = str(spike_params["sample_rate"])
+        tet_meta_dict["duration"] = str(spike_params["duration"])
         spike_times_meta_dict["schema_ref"] = "spike_times"
         spike_times_meta_dict["data_name"] = ses_name
         # spike_times_meta_dict["spike_count"] = str(len(cluster_event_times))
