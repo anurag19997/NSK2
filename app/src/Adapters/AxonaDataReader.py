@@ -4,7 +4,7 @@ import re
 import xarray as xr
 
 
-PROJECT_PATH = '/Users/Anurag/Downloads/NeuroLab/NSK-isolated'
+PROJECT_PATH = '../NSK-isolated'
 sys.path.append(PROJECT_PATH)
 print(PROJECT_PATH)
 
@@ -321,51 +321,3 @@ def extract_MECO1_cut_file_meta_data(path, trial_time_without_colon):
 
 
     
-
-    # file_name = cut_path.split('/')[-1]
-    # aid = file_name.split('_')[0]
-    # tetrode = file_name[-5]
-    # animal_data_ref_dict = {"schema_ref": "animal", "data_name": aid}
-    # animal_data_ref = str(animal_data_ref_dict)
-    # probe_data_ref_dict = {"schema_ref": "probe", "data_name": str(tetrode)}
-    # probe_data_ref = str(probe_data_ref_dict)
-    # spike_labels_dataarray.attrs["schema_ref"] = "spike_labels"
-    # # spike_labels_dataarray.attrs["data_name"] = ses_name # aid_date_depth_tetrode_LEC_study1
-    # spike_labels_dataarray.attrs["has_file"] = "true"
-    # spike_labels_dataarray.attrs["data_dimensions"] = ["spike_idx", "1"]
-    # spike_labels_dataarray.attrs["dimension_of_measure"] = "[nominal]"
-    # # spike_labels_dataarray.attrs["session_data_ref"] = session_data_ref
-    # spike_labels_dataarray.attrs["animal_data_ref"] = animal_data_ref
-    # spike_labels_dataarray.attrs["probe_data_ref"] = probe_data_ref
-
-# def extract_MECO1_cut_file_meta_data(cut_path):
-#     file_name = cut_path.split('/')[-1]
-#     aid = file_name.split('_')[0]
-#     tetrode = file_name[-5]
-#     animal_data_ref_dict = {"schema_ref": "animal", "data_name": aid}
-#     animal_data_ref = str(animal_data_ref_dict)
-#     probe_data_ref_dict = {"schema_ref": "probe", "data_name": str(tetrode)}
-#     probe_data_ref = str(probe_data_ref_dict)
-#     spike_labels_dataarray.attrs["schema_ref"] = "spike_labels"
-#     # spike_labels_dataarray.attrs["data_name"] = ses_name # aid_date_depth_tetrode_LEC_study1
-#     spike_labels_dataarray.attrs["has_file"] = "true"
-#     spike_labels_dataarray.attrs["data_dimensions"] = ["spike_idx", "1"]
-#     spike_labels_dataarray.attrs["dimension_of_measure"] = "[nominal]"
-#     # spike_labels_dataarray.attrs["session_data_ref"] = session_data_ref
-#     spike_labels_dataarray.attrs["animal_data_ref"] = animal_data_ref
-#     spike_labels_dataarray.attrs["probe_data_ref"] = probe_data_ref
-
-
-# def read_cut_file(cut_path, cut_meta_dict):
-    
-#         with open(cut_path, 'r') as open_cut_file:
-#             cut_data = read_tetrode_and_cut._read_cut(open_cut_file)
-
-#         spike_labels_dataarray = xr.DataArray(
-#                     data=np.asarray(cut_data).reshape((-1,1)),
-#                     dims=("spike_idx", "1"),
-#                     coords={"spike_idx": np.arange(len(cut_data))},
-#                 )
-#         spike_labels_dataarray.attrs.update(cut_meta_dict)
-
-#         return spike_labels_dataarray
