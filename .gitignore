@@ -5,3 +5,8 @@ data/input/
 # permanent data directories to ignore
 data/internal/
 data/output/
+data/.Trash-0
+data/.ipynb_checkpoints
+data/.DS_Store
+app/.DS_Store
+
