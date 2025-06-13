@@ -3,8 +3,10 @@ import numpy as np
 import re
 import xarray as xr
 
-
-PROJECT_PATH = 'app/src/NSK-isolated-main'
+if os.path.exists('/.dockerenv'):
+    PROJECT_PATH = '/app/src/NSK-isolated-main'
+else:
+    PROJECT_PATH = 'SignalStore/app/src/NSK-isolated-main'
 sys.path.append(PROJECT_PATH)
 print(PROJECT_PATH)
 

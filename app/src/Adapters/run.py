@@ -19,7 +19,10 @@ def select_directories():
     if not data_directory:
         raise Exception("No data directory selected.")
     
-    save_dir = 'app/data/input'
+    if os.path.exists('/.dockerenv'):
+        save_dir = 'app/data/input'
+    else:
+        save_dir = 'SignalStore/data/input'
     os.makedirs(save_dir, exist_ok=True)  # Ensure the save directory exists
     # save_dir = filedialog.askdirectory(title="Select Save Data Directory")
     # if not save_dir:
