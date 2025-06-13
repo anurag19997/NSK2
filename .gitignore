@@ -2,6 +2,7 @@
 
 # Data to ignore (for now)
 data/input/
+**/data/input/
 # permanent data directories to ignore
 data/internal/
 data/output/
