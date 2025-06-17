@@ -20,7 +20,7 @@ def select_directories():
         raise Exception("No data directory selected.")
     
     if os.path.exists('/.dockerenv'):
-        save_dir = 'app/data/input'
+        save_dir = '/app/data/input'
     else:
         save_dir = 'SignalStore/data/input'
     os.makedirs(save_dir, exist_ok=True)  # Ensure the save directory exists

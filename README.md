@@ -65,7 +65,7 @@
 - Navigate to `/app/src/Adapters/run.py`.
 - Select the `nskfull` environment in VS Code.
 - Execute the script by pressing the play button or choosing `Run → Run without debugging`.
-- Select your input folder when prompted.
+- Select your input folder when prompted. (On windows you might need to go inside the folder to select the parent folder)
 - Processed data (`.netcdf` or `.nc`) files are saved in `/app/data/input`.
 ![alt text](image-6.png)
 
