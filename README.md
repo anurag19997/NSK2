@@ -34,7 +34,7 @@
 ## Setup and Execution
 
 ### Step 5: Configure VS Code
-- Open VS Code and open the cloned `Neuroscikit-2` folder.![alt text](image-1.png)png)
+- Open VS Code and open the cloned `Neuroscikit-2` folder.![alt text](image-1.png)
 - Install the following extensions via the VS Code extension search:![alt text](image-2.png)
 
   - Docker
