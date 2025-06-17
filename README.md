@@ -15,7 +15,9 @@
   git checkout andrew
   ```
 
-- Alternatively you can download zip file: ![alt text](image.png)
+- Alternatively you can download zip file: 
+
+![alt text](image.png)
 
 ### Step 3: Install Required Software
 - **Docker Desktop**: [Download Docker Desktop](https://www.docker.com/products/docker-desktop/) appropriate for your OS.
@@ -32,8 +34,8 @@
 ## Setup and Execution
 
 ### Step 5: Configure VS Code
-- Open VS Code and open the cloned `Neuroscikit-2` folder.![alt text](Picture1.png)
-- Install the following extensions via the VS Code extension search:![alt text](Picture1-1.png)
+- Open VS Code and open the cloned `Neuroscikit-2` folder.![alt text](image-1.png)png)
+- Install the following extensions via the VS Code extension search:![alt text](image-2.png)
 
   - Docker
   - Python
@@ -41,7 +43,7 @@
 
 ### Step 6: Docker Setup
 - Launch Docker Desktop and sign in with lab's Docker account posted on account-info channel on slack.
-- In VS Code, navigate to `docker_compose.yml`, right-click, and select **Compose Up**.![alt text](Picture1-2.png)
+- In VS Code, navigate to `docker_compose.yml`, right-click, and select **Compose Up**.![alt text](image-3.png)
 
 ### Step 7: Dataset Placement
 - Extract the downloaded test dataset.
@@ -52,7 +54,10 @@
 - `Attach to Running container `
 - Select the main app container; it will open a new VS Code window.
 - Close the previous VS Code window.
-![alt text](Picture1-3.png)
+
+![alt text](image-5.png)
+
+![alt text](image-4.png)
 
 ### Step 9: Run Adapter
 - Navigate to `/app/src/Adapters/run.py`.
@@ -60,7 +65,7 @@
 - Execute the script by pressing the play button or choosing `Run → Run without debugging`.
 - Select your input folder when prompted.
 - Processed data (`.netcdf` or `.nc`) files are saved in `/app/data/input`.
-![alt text](Picture1-4.png)
+![alt text](image-6.png)
 
 ### Step 10: Run Animal Performance Notebook
 - Open `notebooks/animal_performance.ipynb` in VS Code.
@@ -72,6 +77,7 @@
 - Queries and settings can be modified as YAML files in:
   ```
   /app/src/queries_and_settings
+  ```
   
 
 
