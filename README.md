@@ -45,7 +45,9 @@
 
 ### Step 6: Docker Setup
 - Launch Docker Desktop and sign in with lab's Docker account posted on account-info channel on slack.
-- In VS Code, navigate to `docker_compose.yml`, right-click, and select **Compose Up**.![alt text](image-3.png)
+- In VS Code, navigate to `docker_compose.yml`, right-click, and select **Compose Up**.
+
+![alt text](image-3.png)
 
 ### Step 7: Dataset Placement
 - Extract the downloaded test dataset.

@@ -24,10 +24,6 @@ def select_directories():
     else:
         save_dir = 'SignalStore/data/input'
     os.makedirs(save_dir, exist_ok=True)  # Ensure the save directory exists
-    # save_dir = filedialog.askdirectory(title="Select Save Data Directory")
-    # if not save_dir:
-    #     raise Exception("No save directory selected.")
-    
     return data_directory, save_dir
 
 

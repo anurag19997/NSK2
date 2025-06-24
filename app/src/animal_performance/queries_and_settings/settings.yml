@@ -1,9 +1,10 @@
 ppm: null # should be in Study record
 smoothing_factor: 3 # should be in Study record
-useMatchedCut: false
+useMatchedCut: false ## delete it later
 arena_size: [50, 50] # should be in arena record
 speed_lowerbound: 3 # should be in Study record
 speed_upperbound: 100 # should be in Study record
+interp_size : [64, 64]
 end_cell: null
 start_cell: null
 num_bins: 16

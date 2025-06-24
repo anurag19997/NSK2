@@ -1,3 +1,5 @@
+# replace the class objects with xarrays
+
 import os, sys
 import numpy as np
 import pandas as pd
@@ -56,7 +58,7 @@ def _aggregate_cell_info(animal, settings):
             seskey_id = seskey.split('_')[-1]
             if seskey_id not in ratemap_session_groups:
                 ratemap_session_groups[seskey_id] = {}
-            ses = animal.sessions[seskey]
+            ses = animal.sessions[seskey] 
             ensemble = ses.get_cell_data()['cell_ensemble']
             pos_obj = ses.get_position_data()['position']
             path = ses.session_metadata.file_paths['tet']

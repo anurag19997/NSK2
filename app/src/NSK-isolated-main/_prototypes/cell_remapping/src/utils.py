@@ -1,3 +1,4 @@
+## only line 239
 import os, sys
 
 PROJECT_PATH = os.getcwd()
@@ -235,7 +236,7 @@ def list_to_array(*lst):
     else:
         return np.array(lst[0]) if isinstance(lst[0], list) else lst[0]
 
-
+## Get data from file name
 def read_data_from_fname(fname, naming_type, typ):
     if naming_type == 'LEC':
         group, name = extract_name_lec(fname)

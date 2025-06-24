@@ -46,7 +46,7 @@ from _prototypes.cell_remapping.src.LC_naming import LC_naming_format, extract_n
 from scripts.batch_map.LEC_naming import LEC_naming_format, extract_name_lec
 
 
-
+## xarray inputs/spiketimes
 def compute_rate_change(prev_spatial_spike_train, curr_spatial_spike_train):
     prev_duration = prev_spatial_spike_train.session_metadata.session_object.get_spike_data()['spike_cluster'].duration
     curr_duration = curr_spatial_spike_train.session_metadata.session_object.get_spike_data()['spike_cluster'].duration
@@ -59,6 +59,7 @@ def compute_rate_change(prev_spatial_spike_train, curr_spatial_spike_train):
 
     return fr_rate_ratio, fr_rate_change
 
+## query for 1 animal all sessions, compute largest number of matched cells(max cells)
 def get_max_matched_cell_count(animal):
     try:
         max_matched_cell_count = max(list(map(lambda x: max(animal.sessions[x].get_cell_data()['cell_ensemble'].get_label_ids()), animal.sessions)))

@@ -312,7 +312,7 @@ class HaftingSpikeMap():
             # print(self.spike_x.shape, self.spike_y.shape, self.new_spike_times.shape)
             # print('computing spike map')
             if not shuffle:
-                if new_size is not None:
+                if new_size is not None: ## can ignore in nsk2
                     self.map_data, self.map_data_raw = self.compute_spike_map(spike_x, spike_y, smoothing_factor, self.arena_size, new_size=new_size, useMinMaxPos=useMinMaxPos)
                 else:
                     self.map_data, self.map_data_raw = self.compute_spike_map(spike_x, spike_y, smoothing_factor, self.arena_size, useMinMaxPos=useMinMaxPos)

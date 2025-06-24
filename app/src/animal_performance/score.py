@@ -36,7 +36,7 @@ def _downsample(img, downsample_factor):
 
 # Taken from https://stackoverflow.com/questions/59144828/opencv-getting-all-blob-pixels
 #public
-def map_blobs(spatial_map: SpatialSpikeTrain2D_signalstore | HaftingRateMap, nofilter=False, **kwargs):
+def map_blobs(rate_map, nofilter=False, **kwargs):
 
     '''
         Segments and labels firing fields in ratemap.
@@ -65,23 +65,10 @@ def map_blobs(spatial_map: SpatialSpikeTrain2D_signalstore | HaftingRateMap, nof
     if 'smoothing_factor' in kwargs:
         smoothing_factor = kwargs['smoothing_factor']
     else:
-        smoothing_factor = spatial_map.smoothing_factor
+        print("No smoothing factor provided, using default of 1.0")     
+        smoothing_factor = 1.0
 
-    if 'ratemap_size' in kwargs:
-        ratemap_size = kwargs['ratemap_size']
-        if isinstance(spatial_map, HaftingRateMap):
-            ratemap, _ = spatial_map.get_rate_map(smoothing_factor, new_size=ratemap_size)
-        elif isinstance(spatial_map, SpatialSpikeTrain2D_signalstore):
-            ratemap, _ = spatial_map.get_map('rate').get_rate_map(smoothing_factor, new_size=ratemap_size)
-        else:
-            ratemap = spatial_map
-    else:
-        if isinstance(spatial_map, HaftingRateMap):
-            ratemap, _ = spatial_map.get_rate_map(smoothing_factor)
-        elif isinstance(spatial_map, SpatialSpikeTrain2D_signalstore):
-            ratemap, _ = spatial_map.get_map('rate').get_rate_map(smoothing_factor)
-        else:
-            ratemap = spatial_map
+    ratemap = rate_map
 
     if 'downsample' in kwargs:
         if kwargs['downsample'] == True:
@@ -151,11 +138,6 @@ def map_blobs(spatial_map: SpatialSpikeTrain2D_signalstore | HaftingRateMap, nof
         field_sizes.append(( len(np.where(labels==i)[0]) / len(image_2.flatten()) ) * 100)
 
     map_blobs_dict = {'image': image, 'n_labels': n_labels, 'centroids': centroids, 'field_sizes': field_sizes}
-
-    if isinstance(spatial_map, HaftingRateMap):
-        spatial_map.spatial_spike_train.add_map_to_stats('map_blobs', map_blobs_dict)
-    elif isinstance(spatial_map, SpatialSpikeTrain2D_signalstore):
-        spatial_map.add_map_to_stats('map_blobs', map_blobs_dict)
 
     return image, n_labels, labels, centroids, field_sizes
 
@@ -590,7 +572,7 @@ def _get_head_direction(x: np.ndarray, y: np.ndarray) -> np.ndarray:
     return angles
 
 # def spatial_tuning_curve(x: np.ndarray, y: np.ndarray, t: np.ndarray, spike_times: np.ndarray, smoothing: int) -> tuple:
-def spatial_tuning_curve(spatial_spike_train: SpatialSpikeTrain2D_signalstore) -> tuple:
+def spatial_tuning_curve(spike_times, pos_x, pos_y, pos_t, smoothing_factor) -> tuple:
 
     '''
         Compute a polar plot of the average directional firing of a neuron.
@@ -615,11 +597,11 @@ def spatial_tuning_curve(spatial_spike_train: SpatialSpikeTrain2D_signalstore) -
             bin_array (np.ndarray):
                 Bins of angles (360 split into 36 bins of width 10 degrees)
     '''
-    spike_times = np.array(spatial_spike_train.spike_times)
-    smoothing = spatial_spike_train.smoothing_factor
-    t = np.array(spatial_spike_train.t)
-    x = np.array(spatial_spike_train.x)
-    y = np.array(spatial_spike_train.y)
+    spike_times = spike_times
+    smoothing = smoothing_factor
+    t = np.array(pos_t)
+    x = np.array(pos_x)
+    y = np.array(pos_y)
 
     # Compute head direction angles
     hd_angles = _get_head_direction(x, y)
@@ -648,7 +630,7 @@ def spatial_tuning_curve(spatial_spike_train: SpatialSpikeTrain2D_signalstore) -
 
     dir_dict = {'tuned_data': tuned_data, 'spike_angles': spike_angles, 'ang_occ': ang_occ, 'bin_array': bin_array}
 
-    spatial_spike_train.add_map_to_stats('spatial_tuning', dir_dict)
+
 
     return tuned_data, spike_angles, ang_occ, bin_array
 
@@ -813,22 +795,13 @@ def _get_rolling_sum(array_in, window):
 
 # called by batch_process module only
 # def hd_score(angles, window_size=23):
-def hd_score(spatial_spike_train: SpatialSpikeTrain2D_signalstore, **kwargs):
-
-    # if 'smoothing_factor' in kwargs:
-    #     smoothing_factor = kwargs['smoothing_factor']
-    # else:
-    #     smoothing_factor = spatial_spike_train.session_metadata.session_object.smoothing_factor
+def hd_score(spike_angles, **kwargs):
 
     if 'window_size' in kwargs:
         window_size = kwargs['window_size']
     else:
         window_size = 23
-
-    if spatial_spike_train.get_map('spatial_tuning') is None:
-        spatial_tuning_data = spatial_tuning_curve(spatial_spike_train)
-        angles = spatial_spike_train.get_map('spatial_tuning')['spike_angles']
-    angles = spatial_tuning_data = spatial_spike_train.get_map('spatial_tuning')['spike_angles']
+    angles = spatial_tuning_data = spike_angles
 
     angles = angles[~np.isnan(angles)]
     theta = np.linspace(0, 2*np.pi, 361)  # x axis
@@ -1338,7 +1311,7 @@ def _factorize_number(n):
 
 
 
-def speed_score(spatial_spike_train: SpatialSpikeTrain2D_signalstore, **kwargs):
+def speed_score(spike_times, pos_x, pos_y, pos_t, **kwargs):
     '''
     Calculate Speed score.
 
@@ -1424,9 +1397,9 @@ def speed_score(spatial_spike_train: SpatialSpikeTrain2D_signalstore, **kwargs):
 
     Copyright (C) 2019 by Simon Ball
     '''
-    x, y, t = spatial_spike_train.x, spatial_spike_train.y, spatial_spike_train.t 
-    spike_times = np.array(spatial_spike_train.spike_times).flatten()
-    tracking_times = np.array(spatial_spike_train.t).flatten()
+    x, y, t = pos_x, pos_y, pos_t 
+    spike_times = np.array(spike_times).flatten()
+    tracking_times = np.array(pos_t).flatten()
     tracking_speeds = speed2D(x, y, t).squeeze().flatten()
 
     # Check that the provided arrays have correct dimensions
@@ -1622,7 +1595,7 @@ def _spiketimes_to_spikerate(spike_times, tracking_times, sampling_rate):
 
     return spike_rate
 
-def grid_score(spatial_spike_train: SpatialSpikeTrain2D_signalstore, **kwargs):
+def grid_score(rate_map, autocorr_map, **kwargs):
 
     '''
         Computes the grid score of neuron given spike data.
@@ -1649,14 +1622,12 @@ def grid_score(spatial_spike_train: SpatialSpikeTrain2D_signalstore, **kwargs):
         if 'smoothing_factor' in kwargs:
             smoothing_factor = kwargs['smoothing_factor']
         else:
-            smoothing_factor = spatial_spike_train.smoothing_factor
+            print("No smoothing factor provided, using default of 1")
+            smoothing_factor = 1
 
-        ratemap, _ = spatial_spike_train.get_map('rate').get_rate_map(smoothing_factor)
+        ratemap = rate_map
 
-        if spatial_spike_train.get_map('autocorr') is None:
-            autocorr = autocorrelation(spatial_spike_train)
-            spatial_spike_train.add_map_to_stats('autocorr', autocorr)
-        autocorr = spatial_spike_train.get_map('autocorr')
+        autocorr = autocorr_map
 
     grid_score_object = opexebo_grid_score(autocorr)
     true_grid_score = grid_score_object[0]
@@ -2271,7 +2242,7 @@ def _findCentreRadius(aCorr, **kwargs):
     return radius
 
 
-def border_score(spatial_spike_train: SpatialSpikeTrain2D_signalstore, **kwargs) -> tuple:
+def border_score(rate_map, **kwargs) -> tuple:
 
     '''
         Computes 4 scores which each reflect selectivity of neurons firing at arena edges,
@@ -2301,19 +2272,13 @@ def border_score(spatial_spike_train: SpatialSpikeTrain2D_signalstore, **kwargs)
         if 'smoothing_factor' in kwargs:
             smoothing_factor = kwargs['smoothing_factor']
         else:
-            smoothing_factor = spatial_spike_train.smoothing_factor
+            print("No smoothing factor provided, using default of 1")
+            smoothing_factor = 1
 
-        rate_map, _ = spatial_spike_train.get_map('rate').get_rate_map(smoothing_factor)
+    rate_map = rate_map
 
-        if spatial_spike_train.get_map('binary') is None:
-            bin_map = binary_map(spatial_spike_train)
-            spatial_spike_train.add_map_to_stats('binary', bin_map)
-        bin_map = spatial_spike_train.get_map('binary')
-
-        # bin_map = binary_map(spatial_spike_train)
+    bin_map = binary_map(rate_map, smoothing_factor=smoothing_factor)
     
-
-
     # If for whatever reason the supplied binary map does not match rate map dimensions, throw error.
     if bin_map.shape != rate_map.shape:
         raise Exception("The binary map and rate map must have the same dimensions")

@@ -40,7 +40,7 @@ def MatlabNumSeq(start, stop, step, exclude=True):
 
 
 # Currentl;y 'unit' == cell id is passed in, when refactored to take in animal: Animal(), can use agg.sorted_events to get cell data, or agg labels, + add agg FD
-def histogram_ISI(spike_class : SpatialSpikeTrain2D_signalstore, maxisi=0.01, isi_histo=[0, 1000, 10], req_burst_spikes=2):
+def histogram_ISI(spike_times, maxisi=0.01, isi_histo=[0, 1000, 10], req_burst_spikes=2):
     """Performs analysis on the data for a tetrode and unit (cell)
     ts- spike times of the unit (cell)
     cluster_mat - cluster_labels
@@ -48,7 +48,7 @@ def histogram_ISI(spike_class : SpatialSpikeTrain2D_signalstore, maxisi=0.01, is
     FD = features used for cluster quality
     """
 
-    ts = spike_class.spike_times
+    ts = spike_times
 
     # Convert to flat NumPy array
     if isinstance(ts, xr.DataArray):
@@ -97,18 +97,18 @@ def histogram_ISI(spike_class : SpatialSpikeTrain2D_signalstore, maxisi=0.01, is
     ISI_dict = {'min': ISI_min, 'max': ISI_max, 'median': ISI_median, 'mean': ISI_mean, 'std': ISI_std, 'cv':
         ISI_cv, 'n': n, 'bins': bins, 'fig': fig}
 
-    spike_class.get_map('spike').set_metric('ISI_dict', ISI_dict)
+    # spike_class.get_map('spike').set_metric('ISI_dict', ISI_dict)
 
     return ISI_dict
 
-def find_burst(spike_class : SpatialSpikeTrain2D_signalstore, maxisi=0.01, req_burst_spikes=2):
+def find_burst(spike_times, maxisi=0.01, req_burst_spikes=2):
     """This function is used to calculate the percentage of bursting
 
     inputs:
     ts- the spike times
     maxisi- the maximum inter spike interval"""
 
-    ts = spike_class.spike_times
+    ts = spike_times
 
     # Convert to flat NumPy array
     if isinstance(ts, xr.DataArray):
@@ -183,8 +183,8 @@ def find_burst(spike_class : SpatialSpikeTrain2D_signalstore, maxisi=0.01, req_b
     bursting = 100 * len(bursts) / (len(bursts) + len(singlespikes))
 
     bursts_n_spikes_avg = _avg_spike_burst(ts, bursts, singlespikes)  # num of spikes on avg per burst
-    spike_class.get_map('spike').set_metric('bursting', bursting)
-    spike_class.get_map('spike').set_metric('bursts_n_spikes_avg', bursts_n_spikes_avg)
+    # spike_class.get_map('spike').set_metric('bursting', bursting)
+    # spike_class.get_map('spike').set_metric('bursts_n_spikes_avg', bursts_n_spikes_avg)
 
     # spike_class.stats_dict['spike']['bursting'] = bursting
     # spike_class.stats_dict['spike']['bursts_n_spikes_avg'] = bursts_n_spikes_avg
@@ -229,7 +229,7 @@ def _avg_spike_burst(ts, bursts, singleSpikes):
     else:
         return np.NaN
 
-def binary_map(spatial_map: HaftingRateMap | SpatialSpikeTrain2D_signalstore, percentile=75, **kwargs):
+def binary_map(rate_map, percentile=75, **kwargs):
 
     '''
         Produces a binary map of place fields from a ratemap based on [1].
@@ -252,30 +252,13 @@ def binary_map(spatial_map: HaftingRateMap | SpatialSpikeTrain2D_signalstore, pe
     if 'smoothing_factor' in kwargs:
         smoothing_factor = kwargs['smoothing_factor']
     else:
-        smoothing_factor = spatial_map.session_metadata.session_object.smoothing_factor
+        print("No smoothing factor provided, using default value of 1")
+        smoothing_factor = 1
 
-    if 'use_map_directly' in kwargs:
-        if kwargs['use_map_directly']:
-            ratemap = spatial_map
-    else:
-        if isinstance(spatial_map, HaftingRateMap):
-            ratemap, _ = spatial_map.get_rate_map(smoothing_factor)
-        elif isinstance(spatial_map, SpatialSpikeTrain2D_signalstore):
-            ratemap, _ = spatial_map.get_map('rate').get_rate_map(smoothing_factor)
-
+    ratemap = rate_map
     binary_map = np.zeros(ratemap.shape)
-    # percentile = 75 
+    
     binary_map[  ratemap >= np.percentile(ratemap.flatten(), percentile)  ] = 1
-
-    # binary_map_copy = np.copy(ratemap)
-    # binary_map = np.zeros(ratemap.shape)
-    # binary_map[  binary_map_copy >= np.percentile(binary_map_copy.flatten(), 75)  ] = 1
-    # binary_map[  binary_map_copy < np.percentile(binary_map_copy.flatten(), 75)  ] = 0  
-
-    if isinstance(spatial_map, HaftingRateMap):
-        spatial_map.spatial_spike_train.add_map_to_stats('binary', binary_map)
-    elif isinstance(spatial_map, SpatialSpikeTrain2D_signalstore):
-        spatial_map.add_map_to_stats('binary', binary_map)
 
     return binary_map
 
